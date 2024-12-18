@@ -1,24 +1,32 @@
 <?php
 require_once 'config.php';
+
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $username = trim($_POST['username'] ?? "");
-    $password = trim($_POST["password"] ?? "");
-  
+    $password = trim($_POST['password'] ?? "");
+
     $sql = "SELECT * FROM users WHERE username = :username";
+
     $stmt = $pdo->prepare($sql);
+
     $stmt->execute([':username' => $username]);
+
     $user = $stmt->fetch();
-    if(password_verify($password, $user['password'])) {
+
+    if (password_verify($password, $user['password'])) {
+
         $_SESSION['username'] = $username;
-        $_SESSION['role'] = 'admin';
-        header("location: admin.php");
+
+        header("location: index.php");
         exit();
     } else {
         echo "Mot de passe incorrect";
     }
 }
+
 ?>
 
 
