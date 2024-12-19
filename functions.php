@@ -1,42 +1,54 @@
 <?php
 require_once 'config.php';
+session_start();
 
-function getArticles($pdo, $title, $content)
+function getArticles($pdo)
 {
-    $sql = "SELECT * FROM articles WHERE title = :title AND content = :content";
+
+    $sql = "SELECT * FROM articles LIMIT 5";
 
     $stmt = $pdo->prepare($sql);
 
-    $stmt->execute([':title' => $title, ':content' => $content]);
+    $stmt->execute();
 
-    while ($article = $stmt->fetchALL(PDO::FETCH_ASSOC)) {
+    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        echo $article->title . " - " . $article->content . '<br>';
+
+    foreach ($articles as $article) {
+
+        if (empty($article)) {
+
+            echo "Aucun article trouvable";
+        } else {
+            echo $article['title'] . '<br>';
+
+            echo $article['content'] . '<br>';
+        }
     }
 }
 
 function getArticle($pdo)
 {
+
     $sql = "SELECT * FROM articles";
 
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute();
 
-    $articles = $stmt->fetchALL(PDO::FETCH_ASSOC);
-
-    $id = [1, 2, 3, 4, 5];
+    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($articles as $article) {
 
-        if (in_array($article['id'], $id)) {
+        if (!$article) {
 
+            echo "Aucun article trouvable";
+        } else {
             echo $article['title'] . '<br>';
 
             echo $article['content'] . '<br>';
-        } else {
 
-            echo "Article inexistant" . '<br>';
         }
     }
 }
+?>

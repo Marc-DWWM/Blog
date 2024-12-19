@@ -7,7 +7,7 @@ try {
     $pdo = new PDO($dsn, $user, $pass);
 
     $pdo->setAttribute(PDO::ATTR_ERRMODE,  PDO::ERRMODE_EXCEPTION);
-    echo "Connexion réussie !";
+    echo "Connexion réussie !" . '<br>';
 } catch (PDOException $e) {
     echo "Erreur de connexion : " . $e->getMessage();
 }
