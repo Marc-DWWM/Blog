@@ -1,54 +1,47 @@
 <?php
-require_once 'config.php';
-session_start();
+
 
 function getArticles($pdo)
 {
 
-    $sql = "SELECT * FROM articles LIMIT 5";
+    $sql = "SELECT id, title, LEFT(content, 200) as content, created_at FROM articles";
 
-    $stmt = $pdo->prepare($sql);
+    $stmt = $pdo->query($sql);
 
-    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
 
-
-    foreach ($articles as $article) {
-
-        if (empty($article)) {
-
-            echo "Aucun article trouvable";
-        } else {
-            echo $article['title'] . '<br>';
-
-            echo $article['content'] . '<br>';
-        }
-    }
 }
 
-function getArticle($pdo)
+
+
+
+function getArticle($pdo, $id)
 {
 
-    $sql = "SELECT * FROM articles";
+    $sql = "SELECT * FROM articles WHERE id = :id";
 
     $stmt = $pdo->prepare($sql);
 
-    $stmt->execute();
+    $stmt->execute([':id' => $id]);
 
-    $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt->fetch();
 
-    foreach ($articles as $article) {
-
-        if (!$article) {
-
-            echo "Aucun article trouvable";
-        } else {
-            echo $article['title'] . '<br>';
-
-            echo $article['content'] . '<br>';
-
-        }
-    }
+   
 }
+
+
+function addComment($pdo, $article_id, $author, $content) {
+
+    $sql = "INSERT INTO comments (article_id, author, content)
+    VALUES (article_id = :article_id, author = :author, content = :content)";
+
+$stmt = $pdo->prepare($sql);
+
+$stmt->execute(['article_id' => $article_id, ':author' => $author, ':content' => $content]);
+
+return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 ?>

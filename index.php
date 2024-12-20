@@ -1,15 +1,8 @@
-<?php 
-    require 'functions.php';
-    
-    session_start();
-    
-    
-    if (isset($_SESSION['username'])) {
-    
-        $username = htmlspecialchars($_SESSION['username']);
-    
-        echo 'Bonjour ' . htmlspecialchars($username) . '<br>';
-    }
+<?php
+require_once 'config.php';
+require 'functions.php';
+
+$articles = getArticles($pdo);
 ?>
 
 
@@ -25,11 +18,12 @@
 </head>
 
 <body>
-    <a href="login.php">retour à connexion</a>
-    <a href="article.php">Article</a>
-    <?php
-getArticles($pdo);
-    ?>
+    <a href="login.php">connexion</a>
+    <?php foreach ($articles as $article): ?>
+<h1><?= $article['title'] ?></h1>
+<p><?= $article['content'] ?></p>
+<a href="article.php?id=<?=$article['id']?>">Plus d'infos</a>
+<?php endforeach; ?>
 </body>
 
 </html>

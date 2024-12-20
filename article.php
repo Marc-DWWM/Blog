@@ -1,13 +1,27 @@
 <?php
-
+require_once 'config.php';
 require_once 'functions.php';
 
-if(isset($_POST['title']) && isset($_POST['content'])) {
-    $title = $_POST['title'];
-    $content = $_post['content'];
+
+
+if (!isset($_GET['id'])) {
+
+    header('location: index.php');
+    exit;
 }
-getArticle($pdo);
-// addComment($pdo);
+
+
+$id = $_GET['id'];
+
+$article = getArticle($pdo, $id);
+
+if (isset($_POST['author']) && isset($_POST['content'])) {
+
+    $author = $_POST['author'];
+    $comments = $_POST['content'];
+    addComment($pdo, $article_id, $author, $content);
+}
+
 ?>
 
 
@@ -22,13 +36,19 @@ getArticle($pdo);
 </head>
 
 <body>
+
+    <h1><?= $article['title'] ?></h1>
+    <p><?= $article['content'] ?></p>
+    <p><?= $article['created_at'] ?></p>
+
     <form action="" method="POST">
+
         <div>
-            <label for="title">Titre : </label>
-            <input type="text" name="title" id="title" />
+            <label for="author">Auteur : </label>
+            <input type="text" name="author" id="author" />
         </div>
         <div>
-            <label for="content">Article : </label>
+            <label for="content">Commentaires : </label>
             <textarea name="content" id="content"></textarea>
         </div>
         <button type="submit">Envoyer</button>
