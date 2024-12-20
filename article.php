@@ -15,13 +15,22 @@ $id = $_GET['id'];
 
 $article = getArticle($pdo, $id);
 
-if (isset($_POST['author']) && isset($_POST['content'])) {
 
-    $author = $_POST['author'];
-    $comments = $_POST['content'];
-    addComment($pdo, $article_id, $author, $content);
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $author = isset($_POST["author"]) ? trim($_POST["author"]) : "";
+    $content = isset($_POST["content"]) ? trim($_POST["content"]) : "";
+
+    addComment($pdo, $id, $author, $content);
+
+    header("location: article.php?id=$id&status=success");
+    //on récupere status avec $_get
+    //header("location: article.php?id=$id&status=success"); permet d'éviter les doublons
+    exit;
 }
 
+
+$comments = getComments($pdo);
 ?>
 
 
@@ -40,7 +49,7 @@ if (isset($_POST['author']) && isset($_POST['content'])) {
     <h1><?= $article['title'] ?></h1>
     <p><?= $article['content'] ?></p>
     <p><?= $article['created_at'] ?></p>
-
+    <a href="index.php">index</a>
     <form action="" method="POST">
 
         <div>
@@ -53,7 +62,13 @@ if (isset($_POST['author']) && isset($_POST['content'])) {
         </div>
         <button type="submit">Envoyer</button>
     </form>
-    <a href="index.php">index</a>
+    <?php foreach ($comments as $comment): ?>
+
+        <h5><?= $comment['author'] ?></h5>
+        <p><?= $comment['content'] ?></p>
+        <p><?= $comment['created_at'] ?></p>
+
+    <?php endforeach; ?>
 </body>
 
 </html>

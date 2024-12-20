@@ -9,9 +9,6 @@ function getArticles($pdo)
     $stmt = $pdo->query($sql);
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    
-
 }
 
 
@@ -27,21 +24,21 @@ function getArticle($pdo, $id)
     $stmt->execute([':id' => $id]);
 
     return $stmt->fetch();
-
-   
 }
 
 
-function addComment($pdo, $article_id, $author, $content) {
+function addComment($pdo, $article_id, $author, $content)
+{
 
     $sql = "INSERT INTO comments (article_id, author, content)
-    VALUES (article_id = :article_id, author = :author, content = :content)";
-
-$stmt = $pdo->prepare($sql);
-
-$stmt->execute(['article_id' => $article_id, ':author' => $author, ':content' => $content]);
-
-return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    VALUES (:article_id, :author, :content)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':article_id' => $article_id, ':author' => $author, ':content' => $content]);
 }
 
-?>
+function getComments($pdo)
+{
+    $sql = "SELECT author, content, created_at FROM comments";
+    $stmt = $pdo->query($sql);
+    return $stmt->fetchAll();
+}
