@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $_SESSION['username'] = $username;
 
-        header("location: index.php");
+        header("location: admin.php");
         exit();
     } else {
         echo "Mot de passe incorrect";

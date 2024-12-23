@@ -42,3 +42,10 @@ function getComments($pdo)
     $stmt = $pdo->query($sql);
     return $stmt->fetchAll();
 }
+
+function addArticle($pdo, $title, $content) {
+    $sql = "INSERT INTO articles (title, content)
+    VALUES (:title, :content)";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([':title' => $title, ':content' => $content]);
+}
